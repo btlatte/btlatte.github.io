@@ -8,6 +8,8 @@
         <script src="https://tmi-relay.nightdev.com/socket.io/socket.io.js"></script>
         <script src="https://www.nightdev.com/hosted/obschat/punycode.min.js"></script>
         <script type="text/javascript" language="javascript">
+			var rawNum = 0;
+			
             // Taken from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values cuz lazy
             function getParameterByName(name) {
                 name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -63,6 +65,7 @@
 
             // Emoticon Code taken from Twitch
             Chat = {
+				
                 clearChat: function(nick) {
                     $('.chat_line[data-nick='+nick+']').remove();
                 },
@@ -154,11 +157,9 @@
 
                     var $newLine = $('<div></div>');
                     $newLine.addClass('chat_line');
+					$newLine.attr('msg-num', rawNum++);
                     $newLine.attr('data-nick', nick);
                     $newLine.attr('data-timestamp', Date.now());
-					if(userData){
-						$newLine.attr('type', userData.userType);
-					}
 
                     var $time = $('<span></span>');
                     $time.addClass('time_stamp')
@@ -171,6 +172,7 @@
                         $tag.addClass('tag');
                         $tag.html('&nbsp;');
                         $newLine.append($tag);
+						$newLine.attr('type', userData.userType);
                     }
 
                     if(nick === Chat.vars.channel) {
@@ -179,6 +181,7 @@
                         $tag.addClass('tag')
                         $tag.html('&nbsp;');
                         $newLine.append($tag);
+						$newLine.attr('type', 'broadcaster');
                     }
 
                     ["turbo", "subscriber"].forEach(function(type) {
@@ -188,6 +191,7 @@
                             $tag.addClass('tag')
                             $tag.html('&nbsp;');
                             $newLine.append($tag);
+							$newLine.attr('type', type);
                         }
                     });
 
